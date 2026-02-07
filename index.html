@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>그때 산집</title>
     <style>
-        /* --- [기본 설정] --- */
+        /* --- [기본 설정 & 레이아웃 튀는 현상 방지] --- */
         @import url('https://fonts.googleapis.com/css2?family=DungGeunMo&display=swap');
+
+        /* 모든 요소의 크기 계산을 테두리 포함으로 통일하여 1~2px 오차 방지 */
+        * { box-sizing: border-box; }
 
         body {
             background-color: #008080;
@@ -40,7 +43,6 @@
             border-bottom-color: #404040;
             box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
             display: grid;
-            /* [★수정됨★] 왼쪽 영역을 nav(메뉴)와 logo(로고)로 분리 */
             grid-template-areas: 
                 "header header"
                 "nav    main"
@@ -71,7 +73,7 @@
         }
         
         .logo-area {
-            grid-area: logo; /* 데스크탑에선 nav 아래 위치 */
+            grid-area: logo;
             width: 100%; 
             padding: 15px 0; 
             background: #fff; 
@@ -80,11 +82,18 @@
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            box-sizing: border-box; 
             gap: 10px;
         }
         
-        .main { grid-area: main; background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px); background-size: 20px 20px; }
+        .main { 
+            grid-area: main; 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px); 
+            background-size: 20px 20px;
+            
+            /* [★수정됨★] 스크롤바 유무에 따른 레이아웃 흔들림 방지 */
+            overflow-y: auto; 
+            scrollbar-gutter: stable; 
+        }
         
         .footer { 
             grid-area: footer; 
@@ -107,7 +116,7 @@
         .content-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .marquee-container { width: 100%; background: #ffcc00; border: 2px solid #000; padding: 5px 0; overflow: hidden; white-space: nowrap; box-sizing: border-box; font-weight: bold; }
+        .marquee-container { width: 100%; background: #ffcc00; border: 2px solid #000; padding: 5px 0; overflow: hidden; white-space: nowrap; font-weight: bold; }
         .marquee-text { display: inline-block; animation: scroll-left 40s linear infinite; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
@@ -141,7 +150,7 @@
                 padding-left: 10px;
                 display: flex;
                 align-items: center;
-                order: 1; /* 1번: 헤더 */
+                order: 1;
             }
 
             /* 메뉴 (상단) */
@@ -153,7 +162,7 @@
                 padding: 4px;
                 border-bottom: 2px solid #404040;
                 background: #c0c0c0;
-                order: 2; /* 2번: 메뉴 */
+                order: 2;
             }
             
             .menu-btn {
@@ -171,35 +180,38 @@
                 padding: 10px;
                 font-size: 15px;
                 line-height: 1.5;
-                order: 3; /* 3번: 본문 */
-                overflow-y: auto; /* 내용 넘치면 스크롤 */
+                order: 3;
+                
+                /* [★중요★] 모바일에서 스크롤바 생성 시 컨텐츠 밀림 방지 */
+                overflow-y: auto;
+                scrollbar-gutter: stable;
             }
 
-            /* [★수정됨★] 로고 영역 (하단으로 이동) */
+            /* 로고 영역 (하단으로 이동) */
             .logo-area {
-                flex: 0 0 auto; /* 내용 크기만큼만 */
+                flex: 0 0 auto;
                 width: 100%;
-                flex-direction: row; /* 가로 배열 */
+                flex-direction: row;
                 padding: 8px;
                 gap: 20px;
                 justify-content: center;
-                order: 4; /* 4번: 본문 아래, 푸터 위 */
+                order: 4;
                 border: none;
                 border-top: 2px solid #dfdfdf;
-                background: #c0c0c0; /* 배경색 통일 */
+                background: #c0c0c0;
             }
             .logo-area img { max-height: 40px; width: auto; }
-            .logo-area span { display: none; } /* 텍스트는 공간상 숨김 */
+            .logo-area span { display: none; }
             .logo-area div { display: none; }
 
-            /* [★수정됨★] 푸터 높이 줄임 */
+            /* 푸터 높이 줄임 */
             .footer { 
-                flex: 0 0 35px; /* 높이 50px -> 35px로 축소 */
+                flex: 0 0 35px;
                 font-size: 14px;
                 width: 100%; 
                 border-top: 1px solid #888;
                 background: #c0c0c0;
-                order: 5; /* 5번: 맨 아래 */
+                order: 5;
             }
 
             /* 내부 콘텐츠 스타일 조정 */
@@ -236,7 +248,7 @@
         <nav class="gray-box nav">
             <button class="menu-btn active" onclick="changeContent('home', this)">🏠 홈 </button>
             <button class="menu-btn" onclick="changeContent('history', this)">📜 가게 연혁</button>
-            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 복어 & 아귀 효능</button>
+            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 복어 & 아구 효능</button>
             <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴</button>
             <button class="menu-btn" onclick="changeContent('reservation', this)">☎️ 예약 방법</button>
             <button class="menu-btn" onclick="changeContent('location', this)">🗺️ 오시는 길</button>
@@ -411,7 +423,7 @@
                 "★ 너가 복어 맛을 알아? 아구 맛을 알아? ★",
             ];
 
-            const gap = "       |       ";
+            const gap = "       |       ";
             
             let longNoticeArray = [];
             for(let i=0; i<6; i++) { 
