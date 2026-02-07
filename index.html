@@ -2,13 +2,14 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>그때 산집</title>
     <style>
         /* --- [기본 설정] --- */
         @import url('https://fonts.googleapis.com/css2?family=DungGeunMo&display=swap');
 
         body {
-            background-color: #008080; /* 기존 배경색 유지 */
+            background-color: #008080;
             font-family: 'DungGeunMo', monospace;
             margin: 0;
             height: 100vh;
@@ -19,7 +20,6 @@
             position: relative;
         }
 
-        /* --- [배경 어항 캔버스 스타일] --- */
         #fishTank {
             position: fixed;
             top: 0;
@@ -30,7 +30,7 @@
             pointer-events: none;
         }
 
-        /* --- [레이아웃] --- */
+        /* --- [데스크탑 레이아웃 (기본)] --- */
         .container {
             width: 1000px;
             height: 90vh;
@@ -52,21 +52,27 @@
             z-index: 1;
         }
 
-        /* --- [공통 박스 스타일] --- */
         .box { background: #fff; border: 2px solid #808080; border-right-color: #fff; border-bottom-color: #fff; padding: 15px; overflow: auto; }
         .gray-box { background: #c0c0c0; border: 2px solid #dfdfdf; border-right-color: #404040; border-bottom-color: #404040; display: flex; align-items: center; justify-content: center; }
 
-        /* --- [구역별 디자인] --- */
         .header { grid-area: header; background: #000080; color: white; justify-content: flex-start; padding-left: 20px; font-size: 24px; text-shadow: 2px 2px #000; }
-        .nav { grid-area: nav; flex-direction: column; justify-content: flex-start; padding: 10px; gap: 8px; }
+        
+        .nav { 
+            grid-area: nav; 
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; 
+            padding: 10px; 
+            gap: 8px; 
+            overflow-y: auto; 
+        }
+        
         .main { grid-area: main; background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px); background-size: 20px 20px; }
         .footer { grid-area: footer; font-size: 12px; }
 
-        /* --- [메뉴 버튼] --- */
         .menu-btn { width: 100%; padding: 8px 0; background: #c0c0c0; border: 2px solid #fff; border-right-color: #404040; border-bottom-color: #404040; cursor: pointer; font-family: inherit; font-size: 16px; text-align: center; }
         .menu-btn:active, .menu-btn.active { border: 2px solid #404040; border-right-color: #fff; border-bottom-color: #fff; background: #e0e0e0; font-weight: bold; }
 
-        /* --- [로고 및 하단 이미지 영역] --- */
         .logo-area {
             margin-top: auto; 
             width: 100%; 
@@ -81,65 +87,120 @@
             gap: 10px;
         }
         
-        .logo-area img { 
-            max-width: 80%; 
-            height: auto; 
-        }
-        #blue_ribon{
-            max-width: 40%;
-        }
+        .logo-area img { max-width: 80%; height: auto; }
+        #blue_ribon{ max-width: 40%; }
 
-        /* --- [콘텐츠 숨김/보임] --- */
         .content-section { display: none; }
         .content-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- [흐르는 텍스트 (Marquee) 디자인] --- */
-        .marquee-container {
-            width: 100%;
-            background: #ffcc00;
-            border: 2px solid #000;
-            padding: 5px 0;
-            overflow: hidden; 
-            white-space: nowrap; 
-            box-sizing: border-box;
-            font-weight: bold;
-        }
+        .marquee-container { width: 100%; background: #ffcc00; border: 2px solid #000; padding: 5px 0; overflow: hidden; white-space: nowrap; box-sizing: border-box; font-weight: bold; }
+        .marquee-text { display: inline-block; animation: scroll-left 40s linear infinite; }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        .marquee-text {
-            display: inline-block;
-            animation: scroll-left 40s linear infinite; 
-        }
+        .main-img-style { border: 4px solid #000; box-shadow: 5px 5px 0 #888; max-height: 400px; max-width: 100%; object-fit: contain; }
 
-        @keyframes scroll-left {
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } 
+        .efficacy-wrapper {
+            display: flex; 
+            gap: 15px; 
+            align-items: flex-start; 
+            margin-top: 10px;
         }
+        .efficacy-img { width: 120px; height: 120px; object-fit: cover; border: 2px solid #ccc; flex-shrink: 0; background-color: #fff; }
 
-        /* --- [메인 이미지 리사이즈] --- */
-        .main-img-style {
-            border: 4px solid #000; 
-            box-shadow: 5px 5px 0 #888;
-            max-height: 400px;
-            max-width: 100%;
-            object-fit: contain; 
-        }
-
-        /* --- [★수정됨★ 효능 섹션 이미지 스타일] --- */
-        .efficacy-img {
-            width: 120px;       /* 너비 고정 (작게) */
-            height: 120px;      /* 높이 고정 (정사각형 비율) */
-            object-fit: cover;  /* 이미지 비율 유지하며 꽉 채우기 */
-            flex-shrink: 0;     /* 글씨가 많아도 이미지 크기가 줄어들지 않음 */
-            background-color: #fff;
-        }
-
-        /* 테이블 스타일 */
         .menu-table { width: 100%; border-top: 2px solid #000; border-bottom: 2px solid #000; margin-top: 20px; border-collapse: collapse;}
         .menu-table th { background: #eee; padding: 10px; border-bottom: 1px solid #000; }
         .menu-table td { padding: 10px; border-bottom: 1px dotted #999; }
-        .menu-price { text-align: right; font-weight: bold; }
+        .menu-price { text-align: right; font-weight: bold; white-space: nowrap; }
 
+
+        /* ==========================================================================
+           [★수정됨★] 모바일 반응형 스타일 (글씨 크기 대폭 확대)
+           ========================================================================== */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 100%; 
+                height: 100vh; /* 화면 전체 사용 */
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                border: none; /* 모바일은 테두리 없앰 */
+            }
+
+            /* 헤더 크기 키움 */
+            .header {
+                flex: 0 0 60px; 
+                font-size: 22px; /* 제목 폰트 키움 */
+                padding-left: 15px;
+            }
+
+            /* 내비게이션 버튼 큼직하게 */
+            .nav {
+                flex: 0 0 auto;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                padding: 10px;
+                border-bottom: 2px solid #404040;
+                background: #c0c0c0;
+            }
+            .menu-btn {
+                height: 50px; /* 버튼 높이 키움 */
+                font-size: 17px; /* 버튼 글씨 키움 */
+                font-weight: bold;
+            }
+
+            .logo-area {
+                grid-column: span 2;
+                flex-direction: row;
+                padding: 10px;
+                gap: 20px;
+                justify-content: center;
+            }
+            .logo-area img { max-height: 50px; width: auto; }
+            .logo-area div { display: none; }
+
+            /* 메인 콘텐츠 글씨 확대 */
+            .main {
+                flex: 1;
+                padding: 15px; /* 여백 확보 */
+                font-size: 16px; /* 본문 기본 글씨 키움 (14->16) */
+                line-height: 1.6; /* 줄 간격 넓게 */
+            }
+
+            /* 제목 태그들도 모바일에선 더 크게 */
+            .main h2 { font-size: 26px; margin: 15px 0; }
+            .main h3 { font-size: 22px; margin: 15px 0; }
+            .main h4 { font-size: 19px; }
+
+            /* 효능 섹션: 위아래 배치 */
+            .efficacy-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .efficacy-wrapper ul {
+                padding-left: 20px;
+                margin-top: 15px;
+                font-size: 16px; /* 리스트 글씨 키움 */
+            }
+            .efficacy-img {
+                width: 100%; /* 이미지를 가로로 꽉 차게 */
+                max-width: 200px; /* 너무 커지진 않게 제한 */
+                height: auto;
+                aspect-ratio: 1/1; /* 정사각형 유지 */
+            }
+
+            /* 메뉴판 테이블 글씨 확대 */
+            .menu-table th, .menu-table td {
+                padding: 12px 5px; /* 셀 안쪽 여백 늘림 */
+                font-size: 15px; /* 테이블 글씨 키움 */
+            }
+            
+            /* 연혁 리스트 등 */
+            ul li { margin-bottom: 8px; }
+
+            .footer { flex: 0 0 40px; font-size: 14px; justify-content: center; display: flex; align-items: center;}
+        }
     </style>
 </head>
 <body>
@@ -154,8 +215,7 @@
         <nav class="gray-box nav">
             <button class="menu-btn active" onclick="changeContent('home', this)">🏠 홈 </button>
             <button class="menu-btn" onclick="changeContent('history', this)">📜 가게 연혁</button>
-            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 복어&아구 효능</button>
-            <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴 (차림표)</button>
+            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 효능</button> <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴</button>
             <button class="menu-btn" onclick="changeContent('reservation', this)">☎️ 예약 방법</button>
             <button class="menu-btn" onclick="changeContent('location', this)">🗺️ 오시는 길</button>
             
@@ -212,8 +272,8 @@
                 
                 <div style="margin-top: 20px;">
                     <h4 style="background-color: #eee; padding: 5px; border-left: 5px solid #008080;">1. 복어의 효능</h4>
-                    <div style="display: flex; gap: 15px; align-items: flex-start; margin-top: 10px;">
-                        <img src="./images/blowfish.jpg" class="efficacy-img" alt="복어 이미지">
+                    <div class="efficacy-wrapper">
+                        <img src="./images/blowfish.jpg" class="efficacy-img" alt="복어 이미지" onerror="this.src='https://via.placeholder.com/120x120?text=BlowFish'">
                         <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
                             <li><b>숙취 해소:</b> 메티오닌과 타우린 성분이 풍부하여 알코올 분해를 돕고 간 기능을 보호합니다.</li>
                             <li><b>다이어트 효과:</b> 지방이 적고 단백질이 풍부한 저칼로리 고단백 식품입니다.</li>
@@ -225,8 +285,8 @@
 
                 <div style="margin-top: 30px;">
                     <h4 style="background-color: #eee; padding: 5px; border-left: 5px solid #008080;">2. 아구의 효능</h4>
-                    <div style="display: flex; gap: 15px; align-items: flex-start; margin-top: 10px;">
-                        <img src="./images/monkfish.jpg" class="efficacy-img" alt="아구 이미지">
+                    <div class="efficacy-wrapper">
+                        <img src="./images/monkfish.jpg" class="efficacy-img" alt="아구 이미지" onerror="this.src='https://via.placeholder.com/120x120?text=MonkFish'">
                         <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
                             <li><b>피부 미용:</b> 껍질에 콜라겐 성분이 다량 함유되어 있어 피부 탄력 유지와 노화 방지에 탁월합니다.</li>
                             <li><b>두뇌 발달:</b> DHA 성분이 풍부하여 기억력 향상 및 두뇌 발달에 도움을 줍니다.</li>
