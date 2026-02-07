@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>그때 산집</title>
+    <style>
+        /* --- [기본 설정] --- */
+        @import url('https://fonts.googleapis.com/css2?family=DungGeunMo&display=swap');
+
+        body {
+            background-color: #008080;
+            font-family: 'DungGeunMo', monospace;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- [레이아웃] --- */
+        .container {
+            width: 1000px;
+            height: 90vh;
+            background-color: #c0c0c0;
+            border: 2px solid #dfdfdf;
+            border-right-color: #404040;
+            border-bottom-color: #404040;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+            display: grid;
+            grid-template-areas: 
+                "header header"
+                "nav    main"
+                "footer footer";
+            grid-template-rows: 70px 1fr 30px;
+            grid-template-columns: 200px 1fr;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        /* --- [공통 박스 스타일] --- */
+        .box { background: #fff; border: 2px solid #808080; border-right-color: #fff; border-bottom-color: #fff; padding: 15px; overflow: auto; }
+        .gray-box { background: #c0c0c0; border: 2px solid #dfdfdf; border-right-color: #404040; border-bottom-color: #404040; display: flex; align-items: center; justify-content: center; }
+
+        /* --- [구역별 디자인] --- */
+        .header { grid-area: header; background: #000080; color: white; justify-content: flex-start; padding-left: 20px; font-size: 24px; text-shadow: 2px 2px #000; }
+        .nav { grid-area: nav; flex-direction: column; justify-content: flex-start; padding: 10px; gap: 8px; }
+        .main { grid-area: main; background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px); background-size: 20px 20px; }
+        .footer { grid-area: footer; font-size: 12px; }
+
+        /* --- [메뉴 버튼] --- */
+        .menu-btn { width: 100%; padding: 8px 0; background: #c0c0c0; border: 2px solid #fff; border-right-color: #404040; border-bottom-color: #404040; cursor: pointer; font-family: inherit; font-size: 16px; text-align: center; }
+        .menu-btn:active, .menu-btn.active { border: 2px solid #404040; border-right-color: #fff; border-bottom-color: #fff; background: #e0e0e0; font-weight: bold; }
+
+        /* --- [로고 및 하단 이미지 영역] --- */
+        .logo-area {
+            margin-top: auto; 
+            width: 100%; 
+            padding: 15px 0; 
+            background: #fff; 
+            border: 2px inset #fff;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            box-sizing: border-box; 
+            gap: 10px; /* 내부 요소 간격 */
+        }
+        
+        .logo-area img { 
+            max-width: 80%; 
+            height: auto; 
+            /* border: 1px solid #ddd; */
+        }
+        #blue_ribon{
+            max-width: 40%;
+        }
+
+        /* --- [콘텐츠 숨김/보임] --- */
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- [흐르는 텍스트 (Marquee) 디자인] --- */
+        .marquee-container {
+            width: 100%;
+            background: #ffcc00;
+            border: 2px solid #000;
+            padding: 5px 0;
+            overflow: hidden; 
+            white-space: nowrap; 
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            animation: scroll-left 60s linear infinite; 
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* --- [메인 이미지 리사이즈] --- */
+        .main-img-style {
+            border: 4px solid #000; 
+            box-shadow: 5px 5px 0 #888;
+            max-height: 400px;
+            max-width: 100%;
+            object-fit: contain; 
+        }
+
+        /* 테이블 스타일 */
+        .menu-table { width: 100%; border-top: 2px solid #000; border-bottom: 2px solid #000; margin-top: 20px; border-collapse: collapse;}
+        .menu-table th { background: #eee; padding: 10px; border-bottom: 1px solid #000; }
+        .menu-table td { padding: 10px; border-bottom: 1px dotted #999; }
+        .menu-price { text-align: right; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="gray-box header">
+            <span>🐡 그때 산집</span>
+        </header>
+
+        <nav class="gray-box nav">
+            <button class="menu-btn active" onclick="changeContent('home', this)">🏠 홈 </button>
+            <button class="menu-btn" onclick="changeContent('history', this)">📜 가게 연혁</button>
+            <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴 (차림표)</button>
+            <button class="menu-btn" onclick="changeContent('reservation', this)">☎️ 예약 방법</button>
+            <button class="menu-btn" onclick="changeContent('location', this)">🗺️ 오시는 길</button>
+            
+            <div class="logo-area">
+                <img src="./images/logo.png" alt="가게 로고" >
+                <span style="font-size: 12px; color:#555; font-weight:bold;">SINCE 1991</span>
+                
+                <div style="width: 80%; border-top: 1px dotted #999; margin: 5px 0;"></div>
+
+                <img src="./images/hundred.jpg" alt="추가 이미지1" >
+                
+                <img src="./images/blue.png" alt="추가 이미지2" id="blue_ribon">
+            </div>
+        </nav>
+
+        <main class="box main">
+            
+            <div id="home" class="content-section active">
+                <div class="marquee-container">
+                    <div class="marquee-text" id="marquee-text-area"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <h2>어서오세요!</h2>
+                    <img src="images/foreground.png" class="main-img-style" alt="가게 전경">
+                    <p style="margin-top: 20px; line-height: 1.6;">
+                        "내 가족이 먹는 음식 처럼"</br>
+                        "아낌없이 주련다"
+                    </p>
+                </div>
+            </div>
+
+            <div id="history" class="content-section">
+                <h3>📜 우리 가게 발자취</h3>
+                <hr style="border: 1px dashed black;">
+                <ul style="line-height: 2.0; list-style-type: square; margin-top: 20px;">
+                    <li><b>1991. </b> 1대 사장인 유춘영, 김순자 부부 가게 개업</li>
+                    <li><b>2015. </b> 2대 사장인 유미카엘, 박진주 부부 사업 계승 시작</li>
+                    <li><b>2015. </b> 전주시로부터 음식창의 업소 지정</li>
+                    <li><b>2016. </b> 그때산집 상표 등록(특허청)</li>
+                    <li><b>2019. </b> 전주음식 DNA 타임캡슐 업소지정</li>
+                    <li><b>2021. </b> 백년가게 선정</li>
+                </ul>
+                <div style="text-align:center; margin-top:30px;">
+                    <img src="https://via.placeholder.com/400x200?text=Old+Photo+1991" alt="옛날 사진" style="filter: grayscale(100%); border: 5px solid white; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
+                    <p style="font-size: 12px; color: #666;">▲ 1991년 개업 당시 모습</p>
+                </div>
+            </div>
+
+            <div id="menu" class="content-section">
+                <h3>🍽️ 차 림 표</h3>
+                <p>※ 복어를 먹으면 복이들어와요. 아구를 먹으면 아구아구 힘이 솟아요.</p>
+                <table class="menu-table">
+                    <thead>
+                        <tr><th>메뉴명</th><th>설명</th><th>가격</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>복어탕</b></td><td>복어로 만든 탕, <strong>맑은탕</strong> 또는 <strong>매운탕</strong> 선택 가능</td><td class="menu-price">20,000원</td></tr>
+                        <tr><td><b>아구탕</b></td><td>아구로만든 탕</td><td class="menu-price">16,000원</td></tr>
+                        <tr><td><b>복찜 대</b></td><td>많은양 복어찜</td><td class="menu-price">85,000원</td></tr>
+                        <tr><td><b>복찜 중</b></td><td>중간양 복어찜</td><td class="menu-price">75,500원</td></tr>
+                        <tr><td><b>복찜 소</b></td><td>작은양 복어찜</td><td class="menu-price">65,000원</td></tr>
+                        <tr><td><b>아구찜 대</b></td><td>많은양 아구찜</td><td class="menu-price">65,000원</td></tr>
+                        <tr><td><b>아구찜 중</b></td><td>중간양 아구찜</td><td class="menu-price">55,500원</td></tr>
+                        <tr><td><b>아구찜 소</b></td><td>작은양 아구찜</td><td class="menu-price">45,000원</td></tr>
+                        <tr><td><b>복어 튀김</b></td><td>복어로 만든 튀김</td><td class="menu-price">15,000원</td></tr>
+                        <tr><td><b>어린이 돈까스</b></td><td>어린이로 만든 돈까스 아.님.</td><td class="menu-price">8,000원</td></tr>
+                        <tr><td><b>날치알주먹밥</b></td><td>날치알이 들어간 주먹밥</td><td class="menu-price">3,000원</td></tr>
+                        <tr><td><b>공기밥</b></td><td>밥</td><td class="menu-price">1,000원</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="reservation" class="content-section">
+                <h3>☎️ 예약 안내</h3>
+                <hr>
+                <div style="background: #e6f7ff; padding: 20px; border: 2px solid #000080; margin-top: 20px;">
+                    <h4 style="margin-top:0;">[전화 예약]</h4>
+                    <p style="font-size: 24px; font-weight: bold; color: #000080;">063 - 277 - 0492</p>
+                    <p>오전 10시 ~ 오후 8시 사이 전화 주세요.</p>
+                </div>
+                <br>
+                <h4>[단체 예약]</h4>
+                <p>8인 이상 단체는 최소 2일 전 연락 부탁드립니다.</p>
+            </div>
+
+            <div id="location" class="content-section">
+                <h3>🗺️ 오시는 길</h3>
+                <hr>
+                <div style="text-align: center; margin: 20px 0;">
+                    <iframe 
+                        width="100%" 
+                        height="400" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        marginheight="0" 
+                        marginwidth="0" 
+                        style="border: 2px solid #000;"
+                        src="https://maps.google.com/maps?q=전북%20전주시%20완산구%20태평5길%2013-4&t=&z=17&ie=UTF8&iwloc=&output=embed">
+                    </iframe>
+                </div>
+                <ul>
+                    <li><b>주소 :</b> 전북 전주시 완산구 태평5길 13-4</li>
+                    <!-- <li><b>주차 :</b> 가게 앞 2대 가능 (만차 시 공영주차장 이용)</li> -->
+                    <li><b>주차 :</li>
+                </ul>
+            </div>
+
+        </main>
+
+        <footer class="gray-box footer">
+            Tel : 063-277-0492
+        </footer>
+    </div>
+
+    <script>
+        // [기능 1] 화면 전환 함수
+        function changeContent(screenId, btnElement) {
+            var contents = document.getElementsByClassName('content-section');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            document.getElementById(screenId).classList.add('active');
+
+            var buttons = document.getElementsByClassName('menu-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            btnElement.classList.add('active');
+        }
+
+        // [기능 2] 공지사항 텍스트 주입
+        document.addEventListener("DOMContentLoaded", function() {
+            const notices = [
+                "📢 영업시간 안내: 매일 오전 09시 ~ 오후 09시 (설날 휴무)",
+                "★ 복어가 힙합이고 아구가 락이다.★",
+                "★ 너가 복어 맛을 알아? 아구 맛을 알아? ★",
+            ];
+
+            const gap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            
+            let longNoticeArray = [];
+            for(let i=0; i<6; i++) { 
+                longNoticeArray = longNoticeArray.concat(notices);
+            }
+            
+            const combinedNotice = longNoticeArray.join(gap);
+
+            const marqueeArea = document.getElementById('marquee-text-area');
+            if (marqueeArea) {
+                marqueeArea.innerHTML = combinedNotice;
+            }
+        });
+    </script>
+
+</body>
+</html>
