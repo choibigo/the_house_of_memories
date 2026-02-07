@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>그때 산집</title>
     <style>
-        /* --- [기본 설정] --- */
+        /* --- [기본 설정 (데스크탑)] --- */
         @import url('https://fonts.googleapis.com/css2?family=DungGeunMo&display=swap');
 
         body {
@@ -30,7 +30,6 @@
             pointer-events: none;
         }
 
-        /* --- [데스크탑 레이아웃 (기본)] --- */
         .container {
             width: 1000px;
             height: 90vh;
@@ -100,12 +99,7 @@
 
         .main-img-style { border: 4px solid #000; box-shadow: 5px 5px 0 #888; max-height: 400px; max-width: 100%; object-fit: contain; }
 
-        .efficacy-wrapper {
-            display: flex; 
-            gap: 15px; 
-            align-items: flex-start; 
-            margin-top: 10px;
-        }
+        .efficacy-wrapper { display: flex; gap: 15px; align-items: flex-start; margin-top: 10px; }
         .efficacy-img { width: 120px; height: 120px; object-fit: cover; border: 2px solid #ccc; flex-shrink: 0; background-color: #fff; }
 
         .menu-table { width: 100%; border-top: 2px solid #000; border-bottom: 2px solid #000; margin-top: 20px; border-collapse: collapse;}
@@ -115,91 +109,94 @@
 
 
         /* ==========================================================================
-           [★수정됨★] 모바일 반응형 스타일 (글씨 크기 대폭 확대)
+           [★수정됨★] 모바일 레이아웃 최적화 (메뉴 줄이고 본문 키우기)
            ========================================================================== */
         @media screen and (max-width: 768px) {
             .container {
                 width: 100%; 
-                height: 100vh; /* 화면 전체 사용 */
+                height: 100vh;
                 display: flex;
                 flex-direction: column;
                 gap: 0;
-                border: none; /* 모바일은 테두리 없앰 */
+                border: none;
             }
 
-            /* 헤더 크기 키움 */
+            /* 1. 헤더 높이 축소 */
             .header {
-                flex: 0 0 60px; 
-                font-size: 22px; /* 제목 폰트 키움 */
-                padding-left: 15px;
+                flex: 0 0 40px; /* 60px -> 40px로 축소 */
+                font-size: 18px; 
+                padding-left: 10px;
+                display: flex;
+                align-items: center;
             }
 
-            /* 내비게이션 버튼 큼직하게 */
+            /* 2. 내비게이션: 3열 배치로 변경하여 높이 절약 */
             .nav {
                 flex: 0 0 auto;
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                padding: 10px;
+                grid-template-columns: 1fr 1fr 1fr; /* 2열 -> 3열 (한 줄에 3개) */
+                gap: 4px;
+                padding: 4px;
                 border-bottom: 2px solid #404040;
                 background: #c0c0c0;
             }
+            
+            /* 3. 메뉴 버튼: 높이와 글씨 크기 최적화 */
             .menu-btn {
-                height: 50px; /* 버튼 높이 키움 */
-                font-size: 17px; /* 버튼 글씨 키움 */
-                font-weight: bold;
-            }
-
-            .logo-area {
-                grid-column: span 2;
-                flex-direction: row;
-                padding: 10px;
-                gap: 20px;
+                height: 36px; /* 50px -> 36px로 축소 */
+                font-size: 13px; /* 3열에 맞게 글씨 조정 */
+                padding: 0; /* 패딩 제거하여 공간 확보 */
+                display: flex;
+                align-items: center;
                 justify-content: center;
             }
-            .logo-area img { max-height: 50px; width: auto; }
-            .logo-area div { display: none; }
 
-            /* 메인 콘텐츠 글씨 확대 */
+            /* 4. 로고 영역: 높이 최소화 */
+            .logo-area {
+                grid-column: span 3; /* 가로 전체 차지 */
+                flex-direction: row;
+                padding: 4px;
+                gap: 10px;
+                justify-content: center;
+                min-height: 40px; /* 최소 높이 지정 */
+            }
+            .logo-area img { max-height: 30px; width: auto; } /* 로고 크기 축소 */
+            .logo-area span { font-size: 10px; } /* 텍스트 축소 */
+            .logo-area div { display: none; } /* 구분선 숨김 */
+
+            /* 5. 메인 콘텐츠: 남는 공간 모두 차지하도록 설정 */
             .main {
-                flex: 1;
-                padding: 15px; /* 여백 확보 */
-                font-size: 16px; /* 본문 기본 글씨 키움 (14->16) */
-                line-height: 1.6; /* 줄 간격 넓게 */
+                flex: 1; /* 화면의 나머지 모든 영역을 꽉 채움 */
+                padding: 10px;
+                font-size: 15px; /* 본문 글씨는 잘 보이게 유지 */
+                line-height: 1.5;
             }
 
-            /* 제목 태그들도 모바일에선 더 크게 */
-            .main h2 { font-size: 26px; margin: 15px 0; }
-            .main h3 { font-size: 22px; margin: 15px 0; }
-            .main h4 { font-size: 19px; }
+            /* 모바일에서 콘텐츠 제목 크기 조정 */
+            .main h2 { font-size: 20px; margin: 10px 0; }
+            .main h3 { font-size: 18px; margin: 10px 0; }
 
-            /* 효능 섹션: 위아래 배치 */
+            /* 효능 섹션 모바일 배치 */
             .efficacy-wrapper {
                 flex-direction: column;
                 align-items: center;
             }
+            .efficacy-img {
+                width: 100px; height: 100px; /* 모바일에서 이미지 살짝 줄임 */
+            }
             .efficacy-wrapper ul {
                 padding-left: 20px;
-                margin-top: 15px;
-                font-size: 16px; /* 리스트 글씨 키움 */
-            }
-            .efficacy-img {
-                width: 100%; /* 이미지를 가로로 꽉 차게 */
-                max-width: 200px; /* 너무 커지진 않게 제한 */
-                height: auto;
-                aspect-ratio: 1/1; /* 정사각형 유지 */
+                margin-top: 10px;
+                font-size: 14px;
             }
 
-            /* 메뉴판 테이블 글씨 확대 */
+            /* 메뉴판 테이블 */
             .menu-table th, .menu-table td {
-                padding: 12px 5px; /* 셀 안쪽 여백 늘림 */
-                font-size: 15px; /* 테이블 글씨 키움 */
+                padding: 8px 4px;
+                font-size: 13px;
             }
             
-            /* 연혁 리스트 등 */
-            ul li { margin-bottom: 8px; }
-
-            .footer { flex: 0 0 40px; font-size: 14px; justify-content: center; display: flex; align-items: center;}
+            .footer { flex: 0 0 30px; font-size: 11px; justify-content: center; display: flex; align-items: center;}
         }
     </style>
 </head>
@@ -215,19 +212,20 @@
         <nav class="gray-box nav">
             <button class="menu-btn active" onclick="changeContent('home', this)">🏠 홈 </button>
             <button class="menu-btn" onclick="changeContent('history', this)">📜 가게 연혁</button>
-            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 효능</button> <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴</button>
+            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 효능</button>
+            <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴</button>
             <button class="menu-btn" onclick="changeContent('reservation', this)">☎️ 예약 방법</button>
             <button class="menu-btn" onclick="changeContent('location', this)">🗺️ 오시는 길</button>
             
             <div class="logo-area">
-                <img src="./images/logo.png" alt="가게 로고" onerror="this.src='https://via.placeholder.com/150x80?text=MAIN+LOGO'">
+                <img src="./images/logo.png" alt="가게 로고" onerror="this.src='https://via.placeholder.com/150x80?text=LOGO'">
                 <span style="font-size: 12px; color:#555; font-weight:bold;">SINCE 1991</span>
                 
                 <div style="width: 80%; border-top: 1px dotted #999; margin: 5px 0;"></div>
 
-                <img src="./images/hundred.jpg" alt="추가 이미지1" onerror="this.src='https://via.placeholder.com/150x60?text=Cert+Mark'">
+                <img src="./images/hundred.jpg" alt="추가 이미지1" onerror="this.src='https://via.placeholder.com/150x60?text=Cert'">
                 
-                <img src="./images/blue.png" alt="추가 이미지2" id="blue_ribon" onerror="this.src='https://via.placeholder.com/60x60?text=Partner'">
+                <img src="./images/blue.png" alt="추가 이미지2" id="blue_ribon" onerror="this.src='https://via.placeholder.com/60x60?text=Ribbon'">
             </div>
         </nav>
 
@@ -238,10 +236,10 @@
                     <div class="marquee-text" id="marquee-text-area"></div>
                 </div>
 
-                <div style="text-align: center; margin-top: 30px;">
+                <div style="text-align: center; margin-top: 20px;">
                     <h2>어서오세요!</h2>
                     <img src="images/foreground.png" class="main-img-style" alt="가게 전경" onerror="this.src='https://via.placeholder.com/600x400?text=Main+Image'">
-                    <p style="margin-top: 20px; line-height: 1.6;">
+                    <p style="margin-top: 15px;">
                         "내 가족이 먹는 음식 처럼"</br>
                         "아낌없이 주련다"
                     </p>
@@ -251,7 +249,7 @@
             <div id="history" class="content-section">
                 <h3>📜 우리 가게 발자취</h3>
                 <hr style="border: 1px dashed black;">
-                <ul style="line-height: 2.0; list-style-type: square; margin-top: 20px;">
+                <ul style="line-height: 1.8; list-style-type: square; margin-top: 15px;">
                     <li><b>1991. </b> 1대 사장인 유춘영, 김순자 부부 가게 개업</li>
                     <li><b>2015. </b> 2대 사장인 유미카엘, 박진주 부부 사업 계승 시작</li>
                     <li><b>2015. </b> 전주시로부터 음식창의 업소 지정</li>
@@ -260,8 +258,8 @@
                     <li><b>2021. </b> 백년가게 선정</li>
                     <li><b>2025. </b> 블루리본 선정</li>
                 </ul>
-                <div style="text-align:center; margin-top:30px;">
-                    <img src="https://via.placeholder.com/400x200?text=Old+Photo+1991" alt="옛날 사진" style="filter: grayscale(100%); border: 5px solid white; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
+                <div style="text-align:center; margin-top:20px;">
+                    <img src="https://via.placeholder.com/400x200?text=Old+Photo+1991" alt="옛날 사진" style="filter: grayscale(100%); border: 5px solid white; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); max-width: 100%;">
                     <p style="font-size: 12px; color: #666;">▲ 1991년 개업 당시 모습</p>
                 </div>
             </div>
@@ -274,7 +272,7 @@
                     <h4 style="background-color: #eee; padding: 5px; border-left: 5px solid #008080;">1. 복어의 효능</h4>
                     <div class="efficacy-wrapper">
                         <img src="./images/blowfish.jpg" class="efficacy-img" alt="복어 이미지" onerror="this.src='https://via.placeholder.com/120x120?text=BlowFish'">
-                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
                             <li><b>숙취 해소:</b> 메티오닌과 타우린 성분이 풍부하여 알코올 분해를 돕고 간 기능을 보호합니다.</li>
                             <li><b>다이어트 효과:</b> 지방이 적고 단백질이 풍부한 저칼로리 고단백 식품입니다.</li>
                             <li><b>피로 회복:</b> 비타민 B1, B2가 풍부하여 기력 회복과 면역력 강화에 좋습니다.</li>
@@ -287,7 +285,7 @@
                     <h4 style="background-color: #eee; padding: 5px; border-left: 5px solid #008080;">2. 아구의 효능</h4>
                     <div class="efficacy-wrapper">
                         <img src="./images/monkfish.jpg" class="efficacy-img" alt="아구 이미지" onerror="this.src='https://via.placeholder.com/120x120?text=MonkFish'">
-                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
                             <li><b>피부 미용:</b> 껍질에 콜라겐 성분이 다량 함유되어 있어 피부 탄력 유지와 노화 방지에 탁월합니다.</li>
                             <li><b>두뇌 발달:</b> DHA 성분이 풍부하여 기억력 향상 및 두뇌 발달에 도움을 줍니다.</li>
                             <li><b>위장 건강:</b> 위와 장을 튼튼하게 하고 소화 불량을 개선하는 효과가 있습니다.</li>
@@ -344,7 +342,7 @@
                 <div style="text-align: center; margin: 20px 0;">
                     <iframe 
                         width="100%" 
-                        height="400" 
+                        height="300" 
                         frameborder="0" 
                         scrolling="no" 
                         marginheight="0" 
@@ -356,7 +354,7 @@
                 <ul>
                     <li><b>주소 :</b> 전북 전주시 완산구 태평5길 13-4</li>
                     <!-- <li><b>주차 :</b> 가게 앞 2대 가능 (만차 시 공영주차장 이용)</li> -->
-                    <li><b>주차 : </li>
+                    <li><b>주차 :</li>
                 </ul>
             </div>
 
