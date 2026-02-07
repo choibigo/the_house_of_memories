@@ -8,7 +8,7 @@
         @import url('https://fonts.googleapis.com/css2?family=DungGeunMo&display=swap');
 
         body {
-            background-color: #008080;
+            background-color: #008080; /* 기존 배경색 유지 */
             font-family: 'DungGeunMo', monospace;
             margin: 0;
             height: 100vh;
@@ -16,13 +16,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+        }
+
+        /* --- [배경 어항 캔버스 스타일] --- */
+        #fishTank {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* --- [레이아웃] --- */
         .container {
             width: 1000px;
             height: 90vh;
-            background-color: #c0c0c0;
+            background-color: rgba(192, 192, 192, 0.85);
             border: 2px solid #dfdfdf;
             border-right-color: #404040;
             border-bottom-color: #404040;
@@ -36,6 +48,8 @@
             grid-template-columns: 200px 1fr;
             padding: 4px;
             gap: 4px;
+            position: relative;
+            z-index: 1;
         }
 
         /* --- [공통 박스 스타일] --- */
@@ -64,13 +78,12 @@
             align-items: center; 
             justify-content: center; 
             box-sizing: border-box; 
-            gap: 10px; /* 내부 요소 간격 */
+            gap: 10px;
         }
         
         .logo-area img { 
             max-width: 80%; 
             height: auto; 
-            /* border: 1px solid #ddd; */
         }
         #blue_ribon{
             max-width: 40%;
@@ -95,7 +108,7 @@
 
         .marquee-text {
             display: inline-block;
-            animation: scroll-left 60s linear infinite; 
+            animation: scroll-left 40s linear infinite; 
         }
 
         @keyframes scroll-left {
@@ -112,6 +125,15 @@
             object-fit: contain; 
         }
 
+        /* --- [★수정됨★ 효능 섹션 이미지 스타일] --- */
+        .efficacy-img {
+            width: 120px;       /* 너비 고정 (작게) */
+            height: 120px;      /* 높이 고정 (정사각형 비율) */
+            object-fit: cover;  /* 이미지 비율 유지하며 꽉 채우기 */
+            flex-shrink: 0;     /* 글씨가 많아도 이미지 크기가 줄어들지 않음 */
+            background-color: #fff;
+        }
+
         /* 테이블 스타일 */
         .menu-table { width: 100%; border-top: 2px solid #000; border-bottom: 2px solid #000; margin-top: 20px; border-collapse: collapse;}
         .menu-table th { background: #eee; padding: 10px; border-bottom: 1px solid #000; }
@@ -122,6 +144,8 @@
 </head>
 <body>
 
+    <canvas id="fishTank"></canvas>
+
     <div class="container">
         <header class="gray-box header">
             <span>🐡 그때 산집</span>
@@ -130,19 +154,20 @@
         <nav class="gray-box nav">
             <button class="menu-btn active" onclick="changeContent('home', this)">🏠 홈 </button>
             <button class="menu-btn" onclick="changeContent('history', this)">📜 가게 연혁</button>
+            <button class="menu-btn" onclick="changeContent('efficacy', this)">🐟 복어&아구 효능</button>
             <button class="menu-btn" onclick="changeContent('menu', this)">🍽️ 메뉴 (차림표)</button>
             <button class="menu-btn" onclick="changeContent('reservation', this)">☎️ 예약 방법</button>
             <button class="menu-btn" onclick="changeContent('location', this)">🗺️ 오시는 길</button>
             
             <div class="logo-area">
-                <img src="./images/logo.png" alt="가게 로고" >
+                <img src="./images/logo.png" alt="가게 로고" onerror="this.src='https://via.placeholder.com/150x80?text=MAIN+LOGO'">
                 <span style="font-size: 12px; color:#555; font-weight:bold;">SINCE 1991</span>
                 
                 <div style="width: 80%; border-top: 1px dotted #999; margin: 5px 0;"></div>
 
-                <img src="./images/hundred.jpg" alt="추가 이미지1" >
+                <img src="./images/hundred.jpg" alt="추가 이미지1" onerror="this.src='https://via.placeholder.com/150x60?text=Cert+Mark'">
                 
-                <img src="./images/blue.png" alt="추가 이미지2" id="blue_ribon">
+                <img src="./images/blue.png" alt="추가 이미지2" id="blue_ribon" onerror="this.src='https://via.placeholder.com/60x60?text=Partner'">
             </div>
         </nav>
 
@@ -155,7 +180,7 @@
 
                 <div style="text-align: center; margin-top: 30px;">
                     <h2>어서오세요!</h2>
-                    <img src="images/foreground.png" class="main-img-style" alt="가게 전경">
+                    <img src="images/foreground.png" class="main-img-style" alt="가게 전경" onerror="this.src='https://via.placeholder.com/600x400?text=Main+Image'">
                     <p style="margin-top: 20px; line-height: 1.6;">
                         "내 가족이 먹는 음식 처럼"</br>
                         "아낌없이 주련다"
@@ -173,10 +198,46 @@
                     <li><b>2016. </b> 그때산집 상표 등록(특허청)</li>
                     <li><b>2019. </b> 전주음식 DNA 타임캡슐 업소지정</li>
                     <li><b>2021. </b> 백년가게 선정</li>
+                    <li><b>2025. </b> 블루리본 선정</li>
                 </ul>
                 <div style="text-align:center; margin-top:30px;">
                     <img src="https://via.placeholder.com/400x200?text=Old+Photo+1991" alt="옛날 사진" style="filter: grayscale(100%); border: 5px solid white; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
                     <p style="font-size: 12px; color: #666;">▲ 1991년 개업 당시 모습</p>
+                </div>
+            </div>
+
+            <div id="efficacy" class="content-section">
+                <h3>🐟 복어와 아구의 효능</h3>
+                <hr style="border: 1px dashed black;">
+                
+                <div style="margin-top: 20px;">
+                    <h4 style="background-color: #eee; padding: 5px; border-left: 5px solid #008080;">1. 복어의 효능</h4>
+                    <div style="display: flex; gap: 15px; align-items: flex-start; margin-top: 10px;">
+                        <img src="./images/blowfish.jpg" class="efficacy-img" alt="복어 이미지">
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                            <li><b>숙취 해소:</b> 메티오닌과 타우린 성분이 풍부하여 알코올 분해를 돕고 간 기능을 보호합니다.</li>
+                            <li><b>다이어트 효과:</b> 지방이 적고 단백질이 풍부한 저칼로리 고단백 식품입니다.</li>
+                            <li><b>피로 회복:</b> 비타민 B1, B2가 풍부하여 기력 회복과 면역력 강화에 좋습니다.</li>
+                            <li><b>혈액 순환:</b> 몸을 따뜻하게 하고 혈액 순환을 원활하게 하여 성인병 예방에 도움을 줍니다.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h4 style="background-color: #eee; padding: 5px; border-left: 5px solid #008080;">2. 아구의 효능</h4>
+                    <div style="display: flex; gap: 15px; align-items: flex-start; margin-top: 10px;">
+                        <img src="./images/monkfish.jpg" class="efficacy-img" alt="아구 이미지">
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                            <li><b>피부 미용:</b> 껍질에 콜라겐 성분이 다량 함유되어 있어 피부 탄력 유지와 노화 방지에 탁월합니다.</li>
+                            <li><b>두뇌 발달:</b> DHA 성분이 풍부하여 기억력 향상 및 두뇌 발달에 도움을 줍니다.</li>
+                            <li><b>위장 건강:</b> 위와 장을 튼튼하게 하고 소화 불량을 개선하는 효과가 있습니다.</li>
+                            <li><b>성인병 예방:</b> 타우린 성분이 간 기능을 강화하고 혈압 조절에 도움을 줍니다.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center; color: #555; font-size: 14px;">
+                    <p>※ 맛도 좋고 몸에도 좋은 복어와 아구, <b>그때 산집</b>에서 제대로 즐겨보세요!</p>
                 </div>
             </div>
 
@@ -228,14 +289,13 @@
                         scrolling="no" 
                         marginheight="0" 
                         marginwidth="0" 
-                        style="border: 2px solid #000;"
-                        src="https://maps.google.com/maps?q=전북%20전주시%20완산구%20태평5길%2013-4&t=&z=17&ie=UTF8&iwloc=&output=embed">
+                        style="border: 2px solid #000; background: #eee;"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3235.0477386352686!2d127.14112604085105!3d35.823304422269715!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3570235c246b916b%3A0x4cf716c0e660112d!2z7KCE67aB7Yq567OE7J6Q7LmY64-EIOyghOyjvOyLnCDsmYTsgrDqtawg7YOc7Y-JNeq4uCAxMy00!5e0!3m2!1sko!2skr!4v1770435998970!5m2!1sko!2skr">
                     </iframe>
                 </div>
                 <ul>
                     <li><b>주소 :</b> 전북 전주시 완산구 태평5길 13-4</li>
-                    <!-- <li><b>주차 :</b> 가게 앞 2대 가능 (만차 시 공영주차장 이용)</li> -->
-                    <li><b>주차 :</li>
+                    <li><b>주차 :</b> 가게 앞 2대 가능 (만차 시 공영주차장 이용)</li>
                 </ul>
             </div>
 
@@ -270,7 +330,7 @@
                 "★ 너가 복어 맛을 알아? 아구 맛을 알아? ★",
             ];
 
-            const gap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            const gap = "       |       ";
             
             let longNoticeArray = [];
             for(let i=0; i<6; i++) { 
@@ -284,6 +344,151 @@
                 marqueeArea.innerHTML = combinedNotice;
             }
         });
+
+        // ==================================================================================
+        // 어항 배경 (물고기 + 물결) 애니메이션 스크립트
+        // ==================================================================================
+        (function() {
+            const canvas = document.getElementById('fishTank');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function randomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            function randomFloat(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            class Ripple {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = 0;
+                    this.maxRadius = randomInt(20, 50);
+                    this.speed = randomFloat(0.5, 1.5);
+                    this.opacity = randomFloat(0.3, 0.6);
+                }
+
+                update() {
+                    this.radius += this.speed;
+                    this.opacity -= (this.speed / this.maxRadius) * this.opacity;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            }
+
+            class Fish {
+                constructor() {
+                    this.x = randomInt(0, width);
+                    this.y = randomInt(0, height);
+                    this.size = randomInt(8, 15);
+                    this.speed = randomFloat(0.8, 2.5);
+                    this.angle = randomFloat(0, Math.PI * 2);
+                    const colors = ['#FFD700', '#FFA500', '#FF8C00', '#FF4500'];
+                    this.color = colors[randomInt(0, colors.length - 1)];
+                    this.turnSpeed = randomFloat(-0.02, 0.02);
+                }
+
+                update() {
+                    if (Math.random() < 0.05) {
+                        this.turnSpeed = randomFloat(-0.03, 0.03);
+                    }
+                    this.angle += this.turnSpeed;
+
+                    this.x += Math.cos(this.angle) * this.speed;
+                    this.y += Math.sin(this.angle) * this.speed;
+
+                    if (this.x < -this.size) this.x = width + this.size;
+                    if (this.x > width + this.size) this.x = -this.size;
+                    if (this.y < -this.size) this.y = height + this.size;
+                    if (this.y > height + this.size) this.y = -this.size;
+
+                    if (Math.random() < 0.01) {
+                        ripples.push(new Ripple(this.x, this.y));
+                    }
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle);
+
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size * 1.2, this.size * 0.6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(-this.size, 0);
+                    ctx.lineTo(-this.size * 1.5, -this.size * 0.5);
+                    ctx.lineTo(-this.size * 1.5, this.size * 0.5);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = 'black';
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.size * 0.8, this.size * 0.25, this.size * 0.07, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(this.size * 0.8, -this.size * 0.25, this.size * 0.07, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+            }
+
+            const fishes = [];
+            const ripples = [];
+            const fishCount = 15;
+
+            function init() {
+                for (let i = 0; i < fishCount; i++) {
+                    fishes.push(new Fish());
+                }
+                animate();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (let i = ripples.length - 1; i >= 0; i--) {
+                    ripples[i].update();
+                    ripples[i].draw();
+                    if (ripples[i].opacity <= 0.01 || ripples[i].radius >= ripples[i].maxRadius) {
+                        ripples.splice(i, 1);
+                    }
+                }
+
+                fishes.forEach(fish => {
+                    fish.update();
+                    fish.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            init();
+
+        })();
     </script>
 
 </body>
